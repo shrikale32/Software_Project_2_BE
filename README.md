@@ -10,7 +10,7 @@ pip install virtualenv
 
 ii. Create a new virtual environment
 
-virtual venv
+virtualenv venv
 
 iii. Activate the virtualenv 
 
