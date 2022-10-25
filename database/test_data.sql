@@ -1,3 +1,7 @@
+delete from QuestionChoice;
+delete from Question;
+delete from QuestionCategory;
+
 delete from Content;
 delete from ContentCategory;
 delete from ContentType;
