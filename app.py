@@ -17,5 +17,17 @@ def createContent():
     contentId = addContent(contentData)
     return str(contentId)
 
+@app.route('/UpdateContent', methods=['POST'])
+def editContent():
+    contentData = request.get_json(force=True)
+    contentId = updateContent(contentData)
+    return str(contentId)
+
+@app.route('/<string:contentId>/DeleteContent', methods=['GET'])
+def removeContent(contentId):
+    print(contentId)
+    response = deleteContent(contentId)
+    return str(response)
+
 if __name__ == '__main__':
     app.run(debug=True)
