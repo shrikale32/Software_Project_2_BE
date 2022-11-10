@@ -30,8 +30,23 @@ def removeContent(contentId):
 
 ## Methods for querying content with filter
 @app.route('/Content', methods=['GET'])
-def getAllContent():
-    response = listAllContent()
+def getContent():
+    '''
+        Method for requesting content
+        Possible entries for URL parameters (Ids):
+        - category
+        - type
+        - user
+    '''
+    if len(request.args) > 0:
+        c = request.args['category'] if 'category' in request.args else None
+        t = request.args['type'] if 'type' in request.args else None 
+        u = request.args['user'] if 'user' in request.args else None 
+        response = filterContent(c, t, u)
+        
+    else:
+        response = listAllContent()
+        
     return str(response)
 
 if __name__ == '__main__':

@@ -73,3 +73,24 @@ def listAllContent():
     except Error as e:
         print(e)
     return results
+
+def filterContent(category = None, type = None, user = None):
+    results = ''
+    try:
+        db = DBManager()
+        response = db.session.query(Content)
+        
+        if category is not None and str(category) != '':
+            response = response.filter(Content.ContentCategoryId == category)
+        
+        if type is not None and str(type) != '':
+            response = response.filter(Content.ContentTypeId == type)
+            
+        if user is not None and str(user) != '':
+            response = response.filter(Content.UserId == user)
+                
+        response = response.all()    
+        results = [str(c) for c in response]
+    except Error as e:
+        print(e)
+    return results
