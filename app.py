@@ -6,7 +6,6 @@ app = Flask(__name__)
 
 CORS(app)
 
-
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return "Flask Backend is running successfully!"
@@ -27,6 +26,12 @@ def editContent():
 def removeContent(contentId):
     print(contentId)
     response = deleteContent(contentId)
+    return str(response)
+
+## Methods for querying content with filter
+@app.route('/Content', methods=['GET'])
+def getAllContent():
+    response = listAllContent()
     return str(response)
 
 if __name__ == '__main__':

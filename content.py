@@ -1,4 +1,7 @@
+import json
 from common import *
+from database.db_manager import DBManager
+from database.models.content_models import Content
 
 # method for storing new content in database
 def addContent(contentData):
@@ -59,3 +62,14 @@ def deleteContent(contentId):
 
     except Error as e:
         print(e)
+        
+        
+def listAllContent():
+    results = ''
+    try:
+        db = DBManager()
+        response = db.session.query(Content).all()
+        results = [str(c) for c in response]
+    except Error as e:
+        print(e)
+    return results
