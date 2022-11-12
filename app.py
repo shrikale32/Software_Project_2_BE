@@ -1,3 +1,4 @@
+import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from content_service import *
@@ -57,8 +58,10 @@ def getContent():
         response = filterContent(c, t, u, d)
 
     else:
-        response = filterContent(isDemo=True)
-    return json.dumps(response)
+        response = filterContent()
+    
+    response = [c.toObjDict() for c in response]
+    return json.dumps(response,indent=4)
 
 ###############################################################################################
 
@@ -123,8 +126,8 @@ def getQuestions():
     else:
         list = qService.listQuestions()
         
-    result = [str(c) for c in list]
-    return str(result)
+    list = [q.toObjDict() for q in list]    
+    return json.dumps(list, indent=4)
 
 if __name__ == '__main__':
     app.run(debug=True)

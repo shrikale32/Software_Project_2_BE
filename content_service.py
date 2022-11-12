@@ -85,8 +85,7 @@ def filterContent(category = None, type = None, user = None, isDemo = None):
             if isDemo is not None and str(isDemo) != '':
                 response = response.filter(Content.IsDemoSample == isDemo)
                     
-            response = response.all()    
-            results = [str(c) for c in response]
+            results = response.all()    
             
     except Exception as e:
         print(e)

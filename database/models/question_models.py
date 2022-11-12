@@ -11,11 +11,11 @@ class QuestionCategory(Base):
     QuestionCategoryId = Column(Integer, primary_key=True)
     Name = Column(String)
     
-    def __str__(self):
+    def toObjDict(self):
         o = {}
         o['QuestionCategoryId'] = self.QuestionCategoryId
         o['Name'] = self.Name
-        return json.dumps(o)
+        return o
     
 class Question(Base):
     __tablename__ = "Question"
@@ -24,15 +24,25 @@ class Question(Base):
     Statement = Column(String)
     IsDeleted = Column(Boolean)
     
-    Choices = relationship("QuestionChoice", backref=backref("Question"))
+    QuestionCategory = relationship("QuestionCategory", backref=backref("Question"), lazy="subquery")
+    QuestionChoices = relationship("QuestionChoice", backref=backref("Question"), lazy="subquery")
     
-    def __str__(self):
+    def toObjDict(self, loadRelationships = True):
         o = {}
         o['QuestionId'] = self.QuestionId
         o['QuestionCategoryId'] = self.QuestionCategoryId
         o['Statement'] = self.Statement
         o['IsDeleted'] = self.IsDeleted
-        return json.dumps(o)
+        
+        # Load relationships
+        if loadRelationships : 
+            if self.QuestionCategory is not None:
+                o['QuestionCategory'] = self.QuestionCategory.toObjDict()
+            
+            if self.QuestionChoices is not None:
+                o['QuestionChoices'] = [c.toObjDict() for c in self.QuestionChoices]
+        
+        return o
     
 class QuestionChoice(Base):
     __tablename__ = "QuestionChoice"
@@ -42,14 +52,14 @@ class QuestionChoice(Base):
     OrderNumber = Column(Integer)
     IsDeleted = Column(Boolean)
     
-    def __str__(self):
+    def toObjDict(self):
         o = {}
         o['QuestionChoiceId'] = self.QuestionChoiceId
         o['QuestionId'] = self.QuestionId
         o['Label'] = self.Label
         o['OrderNumber'] = self.OrderNumber
         o['IsDeleted'] = self.IsDeleted
-        return json.dumps(o)
+        return o
 
 class Questionnaire(Base):
     __tablename__ = "Questionnaire"
@@ -60,7 +70,7 @@ class Questionnaire(Base):
     TotalNumQs = Column(Integer)
     NumQsAnswered = Column(Integer)
     
-    def __str__(self):
+    def toObjDict(self):
         o = {}
         o['QuestionnaireId'] = self.QuestionnaireId
         o['UserId'] = self.UserId
@@ -68,4 +78,4 @@ class Questionnaire(Base):
         o['EndDate'] = self.EndDate
         o['TotalNumQs'] = self.TotalNumQs
         o['NumQsAnswered'] = self.NumQsAnswered
-        return json.dumps(o)
+        return o

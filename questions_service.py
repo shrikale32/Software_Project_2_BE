@@ -34,7 +34,9 @@ class QuestionsService():
         session.commit()
         
     def deleteQuestion(self, question : Question, session: Session):
-        session.delete(question)
+        #session.delete(question)
+        question.IsDeleted = True
+        session.add(question)
         session.commit()
         
     def listQuestions(self, category = None, isDeleted = False):

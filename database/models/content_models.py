@@ -12,24 +12,24 @@ class ContentCategory(Base):
     IsMeditation = Column(Boolean)
     IsFocus = Column(Boolean)
     
-    def __str__(self):
+    def toObjDict(self):
         o = {}
         o['ContentCategoryId'] = self.ContentCategoryId
         o['Label'] = self.Label
         o['IsMeditation'] = self.IsMeditation
         o['IsFocus'] = self.IsFocus
-        return json.dumps(o)
+        return o
 
 class ContentType(Base):
     __tablename__ = "ContentType"
     ContentTypeId = Column(Integer, primary_key=True)
     Label = Column(String)
     
-    def __str__(self):
+    def toObjDict(self):
         o = {}
         o['ContentTypeId'] = self.ContentTypeId
         o['Label'] = self.Label
-        return json.dumps(o)
+        return o
     
 class Content(Base):
     __tablename__ = "Content"
@@ -43,7 +43,11 @@ class Content(Base):
     IsDemoSample = Column(Boolean)
     IsRemoved = Column(Boolean)
     
-    def __str__(self):
+    ContentCategory = relationship("ContentCategory", backref=backref("Content"), lazy="subquery")
+    ContentType = relationship("ContentType", backref=backref("Content"), lazy="subquery")
+    
+    
+    def toObjDict(self, loadRelationships = True):
         o = {}
         o['ContentId'] = self.ContentId
         o['ContentCategoryId'] = self.ContentCategoryId
@@ -54,5 +58,14 @@ class Content(Base):
         o['UrlLink'] = self.UrlLink
         o['IsDemoSample'] = self.IsDemoSample
         o['IsRemoved'] = self.IsRemoved
-        return json.dumps(o)
+        
+        # Load relationships
+        if loadRelationships : 
+            if self.ContentCategory is not None:
+                o['ContentCategory'] = self.ContentCategory.toObjDict()
+                
+            if self.ContentType is not None:
+                o['ContentType'] = self.ContentType.toObjDict()
+        
+        return o
         

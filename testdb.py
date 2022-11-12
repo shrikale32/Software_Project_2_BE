@@ -20,7 +20,8 @@ service = QuestionsService()
 with db.getSession() as session: 
     qs = service.listQuestions()
     for q in qs: 
-        print('-'*100, q, '\n')
+        qStr = json.dumps(q.toObjDict(loadRelationships=True), indent=4)
+        print('-'*100, '\n', qStr)
         
         # q.IsDeleted = False
         # service.updateQuestion(q, session)
@@ -28,9 +29,15 @@ with db.getSession() as session:
         # if q.QuestionId > 3:
         #     service.deleteQuestion(q,session)
 
-    qtest = Question()
-    qtest.QuestionCategoryId = 2
-    qtest.Statement = 'How are you liking COMP313?'
-    qtest.IsDeleted = False
-    id = service.addQuestion(qtest, session)
-    print(id)
+    # qtest = Question()
+    # qtest.QuestionCategoryId = 2
+    # qtest.Statement = 'How are you liking COMP313?'
+    # qtest.IsDeleted = False
+    # id = service.addQuestion(qtest, session)
+    # print(id)
+    
+    qt = service.getQuestion(1, session)
+    jstr = json.dumps(qt.toObjDict(), indent=4)
+    print(jstr)
+    
+    
