@@ -40,21 +40,20 @@ def getContent():
         - isDemo (Boolean)
     '''
     if len(request.args) > 0:
-        
+
         c = request.args['category'] if 'category' in request.args else None
-        t = request.args['type'] if 'type' in request.args else None 
-        u = request.args['user'] if 'user' in request.args else None 
-        
+        t = request.args['type'] if 'type' in request.args else None
+        u = request.args['user'] if 'user' in request.args else None
+
         if 'isDemo' in request.args:
             d = request.args['isDemo'].lower() in ['true', 'yes', '1']
-        
-        
+
+
         response = filterContent(c, t, u, d)
-        
+
     else:
         response = filterContent(isDemo=True)
-        
-    return str(response)
+    return json.dumps(response)
 
 if __name__ == '__main__':
     app.run(debug=True)
