@@ -1,4 +1,4 @@
-import json
+import traceback
 from database.common import *
 from database.db_manager import DBManager
 from database.models.content_models import Content
@@ -68,22 +68,28 @@ def filterContent(category = None, type = None, user = None, isDemo = None):
     results = ''
     try:
         db = DBManager()
-        response = db.getSession().query(Content)
         
-        if category is not None and str(category) != '':
-            response = response.filter(Content.ContentCategoryId == category)
+        with db.getSession() as session: 
         
-        if type is not None and str(type) != '':
-            response = response.filter(Content.ContentTypeId == type)
+            response = session.query(Content)
             
-        if user is not None and str(user) != '':
-            response = response.filter(Content.UserId == user)
-        
-        if isDemo is not None and str(isDemo) != '':
-            response = response.filter(Content.IsDemoSample == isDemo)
+            if category is not None and str(category) != '':
+                response = response.filter(Content.ContentCategoryId == category)
+            
+            if type is not None and str(type) != '':
+                response = response.filter(Content.ContentTypeId == type)
                 
-        response = response.all()    
-        results = [str(c) for c in response]
-    except Error as e:
+            if user is not None and str(user) != '':
+                response = response.filter(Content.UserId == user)
+            
+            if isDemo is not None and str(isDemo) != '':
+                response = response.filter(Content.IsDemoSample == isDemo)
+                    
+            response = response.all()    
+            results = [str(c) for c in response]
+            
+    except Exception as e:
         print(e)
+        traceback.print_exc()
+        
     return results
