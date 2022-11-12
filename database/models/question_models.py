@@ -1,5 +1,5 @@
 import json
-from sqlalchemy import Column, ForeignKey, Table
+from sqlalchemy import Column, ForeignKey, Identity
 from sqlalchemy import Integer, String, Boolean, Date
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
@@ -19,7 +19,7 @@ class QuestionCategory(Base):
     
 class Question(Base):
     __tablename__ = "Question"
-    QuestionId = Column(Integer, primary_key=True)
+    QuestionId = Column( Integer, Identity(always=True, start=1, increment=1), primary_key=True) 
     QuestionCategoryId = Column(Integer, ForeignKey("QuestionCategory.QuestionCategoryId"))
     Statement = Column(String)
     IsDeleted = Column(Boolean)
