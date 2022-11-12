@@ -1,3 +1,4 @@
+from os import path
 import traceback
 from database.common import *
 from database.db_manager import DBManager
@@ -6,10 +7,9 @@ from database.models.content_models import Content
 # method for storing new content in database
 def addContent(contentData):
     print('inside addContent')
-    conn = create_connection('database\wellbeing.db')
+    conn = create_connection(path.join('database','wellbeing.db'))
 
-    sql = ''' INSERT INTO Content(ContentCategoryId,ContentTypeId,UserId,Title,Body,UrlLink,IsDemoSample,IsRemoved)
-              VALUES(?,?,?,?,?,?,?,?) '''
+    sql = "INSERT INTO Content (ContentCategoryId,ContentTypeId,UserId,Title,Body,UrlLink,IsDemoSample,IsRemoved) VALUES(?,?,?,?,?,?,?,?)"
     
     try:
         cur = conn.cursor()
@@ -27,7 +27,7 @@ def addContent(contentData):
 # method for updating existing content in database
 def updateContent(contentData):
     print('inside updateContent')
-    conn = create_connection('database\wellbeing.db')
+    conn = create_connection(path.join('database','wellbeing.db'))
 
     sql = "UPDATE Content SET ContentCategoryId = {},ContentTypeId = {}, UserId = {}, Title= \'{}\', Body= \'{}\', UrlLink = \'{}\', IsDemoSample = {}, IsRemoved = 0 WHERE ContentId = {}".format(contentData['ContentCategoryId'], contentData['ContentTypeId'], contentData['UserId'],
         contentData['Title'], contentData['Body'], contentData['UrlLink'], contentData['IsDemoSample'], contentData['ContentId'])
@@ -47,9 +47,9 @@ def updateContent(contentData):
 
 # method for removing the existing content from UI (set IsRemoved=1 in content table)
 def deleteContent(contentId):
-    conn = create_connection('database\wellbeing.db')
+    conn = create_connection(path.join('database','wellbeing.db'))
 
-    sql = 'UPDATE Content SET IsRemoved=1 WHERE ContentId=' + contentId
+    sql = "UPDATE Content SET IsRemoved=1 WHERE ContentId=" + contentId
     
     try:
         cur = conn.cursor()
