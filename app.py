@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from content import *
+from content_service import *
 
 app = Flask(__name__)
 
@@ -33,19 +33,26 @@ def removeContent(contentId):
 def getContent():
     '''
         Method for requesting content
-        Possible entries for URL parameters (Ids):
-        - category
-        - type
-        - user
+        Possible entries for URL parameters:
+        - category (Id - int)
+        - type (Id - int)
+        - user (Id - string)
+        - isDemo (Boolean)
     '''
     if len(request.args) > 0:
+        
         c = request.args['category'] if 'category' in request.args else None
         t = request.args['type'] if 'type' in request.args else None 
         u = request.args['user'] if 'user' in request.args else None 
-        response = filterContent(c, t, u)
+        
+        if 'isDemo' in request.args:
+            d = request.args['isDemo'].lower() in ['true', 'yes', '1']
+        
+        
+        response = filterContent(c, t, u, d)
         
     else:
-        response = listAllContent()
+        response = filterContent(isDemo=True)
         
     return str(response)
 

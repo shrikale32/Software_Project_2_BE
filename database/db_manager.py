@@ -5,16 +5,16 @@ from sqlalchemy.orm import sessionmaker
 class DBManager():
     
     #Internal Session Object
-    session = None
+    _session = None
     
     def __init__(self):
         
         # Connect to the database using SQLAlchemy
-        if self.session is None:
+        if self._session is None:
             engine = create_engine(f"sqlite:///{path.join('database', 'wellbeing.db')}")
             Session = sessionmaker()
             Session.configure(bind=engine)
-            self.session = Session()
+            self._session = Session()
     
-    def Session(self):
-        return self.session
+    def getSession(self):
+        return self._session
