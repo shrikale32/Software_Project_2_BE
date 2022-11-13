@@ -2,7 +2,7 @@ import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from content_service import *
-from database.models.question_models import Question
+from database.models.question_models import Question, QuestionChoice
 from questions_service import QuestionsService
 
 app = Flask(__name__)
@@ -71,6 +71,19 @@ def _questionFromJSON(jsonData):
     q.QuestionCategoryId = jsonData['QuestionCategoryId']
     q.Statement = jsonData['Statement']
     q.IsDeleted = jsonData['IsDeleted']
+    
+    if 'QuestionChoices' in jsonData.keys():
+        choices = jsonData['QuestionChoices']
+        q.QuestionChoices = []
+        for c in choices:
+            qc = QuestionChoice()
+            qc.QuestionId = q.QuestionId
+            qc.QuestionChoiceId = c['QuestionChoiceId'] if 'QuestionChoiceId' in c.keys() else None
+            qc.Label = c['Label']
+            qc.OrderNumber = c['OrderNumber']
+            qc.IsDeleted = c['IsDeleted']
+            q.QuestionChoices.append(qc)
+    
     return q
 
 @app.route('/CreateQuestion', methods=['POST'])
@@ -90,6 +103,9 @@ def updateQuestion():
     question.QuestionCategoryId = newQuestion.QuestionCategoryId
     question.Statement = newQuestion.Statement
     question.IsDeleted = newQuestion.IsDeleted
+    
+    # Old Choices are replaced by new ones independently of contents
+    # question.QuestionChoices = newQuestion.QuestionChoices
     
     contentId = qService.updateQuestion(question, s)
     return str(contentId)

@@ -24,12 +24,32 @@ class QuestionsService():
         session.flush()
         session.refresh(question)
         
-        session.commit()
+        # TODO: Transaction Management
+        # Store Question Choices
+        if len(question.QuestionChoices) > 0:
+            for c in question.QuestionChoices:
+                c.QuestionId = question.QuestionId
+                session.add(c)
         
+        session.commit()
         return question.QuestionId
         
 
     def updateQuestion(self, question : Question, session : Session):
+        
+        # session.query(Question).filter(Question.QuestionId == question.QuestionId)\
+        #     .update(question.toObjDict(loadRelationships=False))
+        # session.flush()
+        
+        # # TODO: Transaction Management
+        # # Remove old choices for safety
+        # session.query(QuestionChoice).filter(QuestionChoice.QuestionId == question.QuestionId).delete()
+
+        # # Store Question Choices
+        # for c in question.QuestionChoices:
+        #     c.QuestionId = question.Id
+        #     c.QuestionChoiceId = None
+        #     session.add(c)
         session.add(question)
         session.commit()
         
