@@ -62,6 +62,23 @@ def deleteContent(contentId):
 
     except Error as e:
         print(e)
+
+def deleteAllContentDummy():
+    conn = create_connection(path.join('database','wellbeing.db'))
+
+    sql = "DELETE FROM Content"
+
+    try:
+        cur = conn.cursor()
+        
+        cur.execute(sql)
+
+        conn.commit()
+
+        return cur.lastrowid
+
+    except Error as e:
+        print(e)
         
         
 def filterContent(category = None, type = None, user = None, isDemo = None):

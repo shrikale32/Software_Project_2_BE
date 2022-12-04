@@ -58,6 +58,51 @@ class QuestionsService():
         question.IsDeleted = True
         session.add(question)
         session.commit()
+
+    def getQuestionListDummy(self, question : Question, session: Session):
+        question.IsDeleted = True
+        session.add(question)
+        session.commit()
+
+        '''list = []
+        try:
+            
+            with self._db.getSession() as session: 
+                
+                response = session.query(Question)
+                
+                if category is not None and str(category) != '':
+                    response = response.filter(Question.QuestionCategoryId == category)
+                
+                if isDeleted is not None and str(isDeleted) != '':
+                    response = response.filter(Question.IsDeleted == isDeleted)
+                        
+                list = response.order_by(Question.QuestionId).all()    
+                
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
+        return list'''
+
+    def deleteAllQuestionDummy(self, category = None, isDeleted = False):
+
+        list = []
+        try:
+            
+            with self._db.getSession() as session: 
+                
+                response = session.query(Question)
+                
+                if category is not None and str(category) != '':
+                    response = response.filter(Question.QuestionCategoryId == category)
+                
+                if isDeleted is not None and str(isDeleted) != '':
+                    response = response.filter(Question.IsDeleted == isDeleted)
+                        
+                list = response.order_by(Question.QuestionId).all()
+
+        for x in list:
+            x.IsDeleted = True
         
     def listQuestions(self, category = None, isDeleted = False):
         
