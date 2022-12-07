@@ -1,6 +1,7 @@
 import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from user_service import *
 from content_service import *
 from database.models.question_models import Question, QuestionChoice
 from questions_service import QuestionsService
@@ -144,6 +145,14 @@ def getQuestions():
         
     list = [q.toObjDict() for q in list]    
     return json.dumps(list, indent=4)
+
+# Method for adding a new user by Admin
+@app.route('/AddNewUser', methods=['POST'])
+def addUserByAdmin():
+    userData = request.get_json(force=True)
+    print(userData)
+    userId = addNewUser(userData)
+    return str(userId)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -100,7 +100,10 @@ class QuestionsService():
                     response = response.filter(Question.IsDeleted == isDeleted)
                         
                 list = response.order_by(Question.QuestionId).all()
-
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
+            
         for x in list:
             x.IsDeleted = True
         
