@@ -7,7 +7,7 @@ from database.models.content_models import Content
 # method for storing new content in database
 def addContent(contentData):
     print('inside addContent')
-    conn = create_connection(path.join('database','wellbeing.db'))
+    conn = create_connection(path.join('database','wellbeing.db.sql'))
 
     sql = "INSERT INTO Content (ContentCategoryId,ContentTypeId,UserId,Title,Body,UrlLink,IsDemoSample,IsRemoved) VALUES(?,?,?,?,?,?,?,?)"
     
@@ -63,22 +63,6 @@ def deleteContent(contentId):
     except Error as e:
         print(e)
 
-def deleteAllContentDummy():
-    conn = create_connection(path.join('database','wellbeing.db'))
-
-    sql = "DELETE FROM Content"
-
-    try:
-        cur = conn.cursor()
-        
-        cur.execute(sql)
-
-        conn.commit()
-
-        return cur.lastrowid
-
-    except Error as e:
-        print(e)
         
         
 def filterContent(category = None, type = None, user = None, isDemo = None):
