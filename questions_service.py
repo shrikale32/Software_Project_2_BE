@@ -60,7 +60,7 @@ class QuestionsService():
         session.commit()
 
     
-  
+        
     def listQuestions(self, category = None, isDeleted = False):
         
         list = []
