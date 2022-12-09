@@ -5,6 +5,9 @@ from user_service import *
 from content_service import *
 from database.models.question_models import Question, QuestionChoice
 from questions_service import QuestionsService
+import pandas as pd
+import pickle
+import requests
 
 app = Flask(__name__)
 
@@ -54,6 +57,8 @@ def getContent():
 
         if 'isDemo' in request.args:
             d = request.args['isDemo'].lower() in ['true', 'yes', '1']
+        else:
+            d = None
 
 
         response = filterContent(c, t, u, d)
@@ -153,6 +158,29 @@ def addUserByAdmin():
     print(userData)
     userId = addNewUser(userData)
     return str(userId)
+
+
+## Methods for querying content with filter
+@app.route('/Recommendations', methods=['POST'])
+def get_recommendations():
+    data = request.get_json(force=True)
+    df = pd.DataFrame.from_dict(data, orient='index')
+    print(df)
+    df = df.T
+    print(df)
+    xgb_loaded_model = pickle.load(open("model/xgb.pkl", "rb"))
+    pred = xgb_loaded_model.predict(df)
+    
+    pred = pred[0] + 1
+    
+
+    url = 'http://localhost:5000/Content?category='+str(pred)
+    
+    content = requests.get(url)
+    c = content.json()
+    
+    return jsonify(c)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
