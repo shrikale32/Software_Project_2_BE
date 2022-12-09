@@ -15,10 +15,15 @@ CORS(app)
 
 db = DBManager()
 qService = QuestionsService(db)
+uService = UserService(db)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return "Flask Backend is running successfully!"
+
+###############################################################################################
+#   CONTENT
+###############################################################################################
 
 @app.route('/CreateContent', methods=['POST'])
 def createContent():
@@ -69,6 +74,8 @@ def getContent():
     return json.dumps(response,indent=4)
 
 ###############################################################################################
+#   QUESTIONS
+###############################################################################################
 
 def _questionFromJSON(jsonData):
     q = Question()
@@ -94,14 +101,14 @@ def _questionFromJSON(jsonData):
 @app.route('/CreateQuestion', methods=['POST'])
 def createQuestion():
     question = _questionFromJSON(request.get_json(force=True))
-    contentId = qService.addQuestion(question, db.getSession())
-    return str(contentId)
+    questionId = qService.addQuestion(question, db.getSession())
+    return str(questionId)
 
 @app.route('/UpdateQuestion', methods=['POST'])
 def updateQuestion():
     newQuestion = _questionFromJSON(request.get_json(force=True))
-    contentId = qService.updateQuestion(newQuestion, db.getSession())
-    return str(contentId)
+    questionId = qService.updateQuestion(newQuestion, db.getSession())
+    return str(questionId)
 
 @app.route('/DeleteQuestion/<int:questionId>/', methods=['POST'])
 def deleteQuestion(questionId):
@@ -113,7 +120,7 @@ def deleteQuestion(questionId):
     qService.deleteQuestion(q, s)
     return 'True'
     
-## Methods for querying content with filter
+## Methods for querying questions with filter
 @app.route('/Questions', methods=['GET'])
 def getQuestions():
     '''
@@ -128,6 +135,8 @@ def getQuestions():
         
         if 'isDeleted' in request.args:
             d = request.args['isDeleted'].lower() in ['true', 'yes', '1']
+        else:
+            d = None
         
         
         list = qService.listQuestions(c, d)
@@ -138,14 +147,80 @@ def getQuestions():
     list = [q.toObjDict() for q in list]    
     return json.dumps(list, indent=4)
 
+###############################################################################################
+#   USERS
+###############################################################################################
+
 # Method for adding a new user by Admin
 @app.route('/AddNewUser', methods=['POST'])
 def addUserByAdmin():
     userData = request.get_json(force=True)
     print(userData)
-    userId = addNewUser(userData)
+    userId = UserService.addNewUser(userData)
     return str(userId)
 
+def _userFromJSON(jsonData):
+    u = User()
+    u.UserId = jsonData['UserId'] if 'UserId' in jsonData.keys() else None             
+    u.Email = jsonData['Email']
+    u.FirstName = jsonData['FirstName']
+    u.LastName = jsonData['LastName']
+    u.RegisterDate = jsonData['RegisterDate']
+    u.StatusId = jsonData['StatusId']
+    u.RoleId = jsonData['RoleId']
+    u.IsDeleted = jsonData['IsDeleted']
+    
+    return u
+
+@app.route('/UpdateUser', methods=['POST'])
+def updateUser():
+    upUser = _userFromJSON(request.get_json(force=True))
+    userId = uService.updateUser(upUser, db.getSession())
+    return str(userId)
+
+@app.route('/DeleteUser/<int:userId>/', methods=['POST'])
+def deleteUser(userId):
+    s = db.getSession()
+    u = uService.getUser(userId, s)
+    if u is None:
+        return 'False'
+    
+    uService.deleteUser(u, s)
+    return 'True'
+
+## Methods for querying questions with filter
+@app.route('/Users', methods=['GET'])
+def getUsers():
+    '''
+        Method for requesting the list of users
+        Possible entries for URL parameters:
+        - email (String)
+        - roleId (Id - int)
+        - statusId (Id - int)
+        - isDeleted (Boolean)
+    '''
+    if len(request.args) > 0:
+        
+        e = request.args['email'] if 'email' in request.args else None
+        r = request.args['roleId'] if 'roleId' in request.args else None
+        s = request.args['statusId'] if 'statusId' in request.args else None
+        
+        if 'isDeleted' in request.args:
+            d = request.args['isDeleted'].lower() in ['true', 'yes', '1']
+        else:
+            d = None
+        
+        list = uService.listUsers(e, r, s, d)
+        
+    else:
+        list = uService.listUsers()
+        
+    list = [u.toObjDict() for u in list]    
+    return json.dumps(list, indent=4)
+
+###############################################################################################
+#   RECOMMENDATIONS
+###############################################################################################
 
 ## Methods for querying content with filter
 @app.route('/Recommendations', methods=['POST'])
