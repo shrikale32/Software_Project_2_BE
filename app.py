@@ -60,7 +60,6 @@ def getContent():
         else:
             d = None
 
-
         response = filterContent(c, t, u, d)
 
     else:
@@ -100,20 +99,8 @@ def createQuestion():
 
 @app.route('/UpdateQuestion', methods=['POST'])
 def updateQuestion():
-    
     newQuestion = _questionFromJSON(request.get_json(force=True))
-    
-    s = db.getSession()
-    
-    question = qService.getQuestion(newQuestion.QuestionId, s)
-    question.QuestionCategoryId = newQuestion.QuestionCategoryId
-    question.Statement = newQuestion.Statement
-    question.IsDeleted = newQuestion.IsDeleted
-    
-    # Old Choices are replaced by new ones independently of contents
-    # question.QuestionChoices = newQuestion.QuestionChoices
-    
-    contentId = qService.updateQuestion(question, s)
+    contentId = qService.updateQuestion(newQuestion, db.getSession())
     return str(contentId)
 
 @app.route('/DeleteQuestion/<int:questionId>/', methods=['POST'])
