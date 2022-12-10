@@ -37,6 +37,10 @@ class UserService():
     def getUser(self, userId : int, session : Session):
         u = session.query(User).get(userId)
         return u
+    
+    def getUserByEmail(self, userEmail : String, session : Session):
+        u = session.query(User).filter(User.Email == userEmail).first()
+        return u
             
     def updateUser(self, user : User, session : Session):
         session.add(user)

@@ -188,6 +188,23 @@ def deleteUser(userId):
     uService.deleteUser(u, s)
     return 'True'
 
+@app.route('/GetUserByEmail', methods=['GET'])
+def getUserByEmail():
+    
+    s = db.getSession()
+    if len(request.args) > 0 and 'email' in request.args:
+        e = request.args['email']
+        u = uService.getUserByEmail(e, s)
+        
+        if u is not None:
+            return json.dumps(u.toObjDict())
+        else:
+            return ""
+            
+    else:
+        return ""
+   
+
 ## Methods for querying questions with filter
 @app.route('/Users', methods=['GET'])
 def getUsers():
