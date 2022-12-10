@@ -22,71 +22,71 @@ insert into UserStatus (StatusId,Label) values (3, 'AccessRequested');
 insert into UserStatus (StatusId,Label) values (4, 'Preregistered');
 
 -- USERS
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('1', 2, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (2, 1,
                      'spate960@my.centennialcollege.ca','Spandan','Patel',
                      '2022-10-01',
                      false
                  );
                  
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('2', 2, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (2, 1,
                      'skale5@my.centennialcollege.ca','Shrikant','Kale',
                      '2022-10-01',
                      false
                  );
                  
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('3', 2, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (2, 1,
                      'nromerol@my.centennialcollege.ca','Nestor','Romero',
                      '2022-10-02',
                      false
                  );
              
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('4', 2, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (2, 1,
                      'djohar@my.centennialcollege.ca','Divyanshu','Johar',
                      '2022-10-02',
                      false
                  );
                  
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('5', 2, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (2, 1,
                      'dshah163@my.centennialcollege.ca','Devanshi','Shah',
                      '2022-10-03',
                      false
                  );
 
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('6', 3, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (3, 1,
                      'scoelho5@my.centennialcollege.ca','Shawn','Coelho',
                      '2022-10-03',
                      false
                  );
 
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('7', 3, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (3, 1,
                      'sbindal1@my.centennialcollege.ca','Samridhi','Bindal',
                      '2022-10-04',
                      false
                  );
 
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('8', 3, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (3, 1,
                      'jjohanmo@my.centennialcollege.ca','Jefil','John Mohan',
                      '2022-10-04',
                      false
                  );
 
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('9', 3, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values (3, 1,
                      'hdharma1@my.centennialcollege.ca','Hitesh','Dharmadhikari',
                      '2022-10-05',
                      false
                  );                                       
 
-insert into User (UserId,RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
-                 values ('10', 1, 1,
+insert into User (RoleId,StatusId,Email,FirstName,LastName,RegisterDate,IsDeleted)
+                 values ( 1, 1,
                      'admin@my.centennialcollege.ca','System','Administrator',
                      '2022-10-10',
                      false

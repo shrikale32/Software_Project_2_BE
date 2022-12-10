@@ -25,7 +25,7 @@ create table UserStatus(
 );
 
 create table User (
-    UserId VARCHAR(32) NOT NULL PRIMARY KEY,
+    UserId INTEGER NOT NULL PRIMARY KEY,
     RoleId INTEGER REFERENCES Role,
     StatusId INTEGER REFERENCES UserStatus,
     Email VARCHAR(255) UNIQUE,
