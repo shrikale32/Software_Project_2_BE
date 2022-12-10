@@ -69,7 +69,7 @@ def getContent():
 
     else:
         response = filterContent()
-    
+
     response = [c.toObjDict() for c in response]
     return json.dumps(response,indent=4)
 
@@ -79,11 +79,11 @@ def getContent():
 
 def _questionFromJSON(jsonData):
     q = Question()
-    q.QuestionId = jsonData['QuestionId'] if 'QuestionId' in jsonData.keys() else None             
+    q.QuestionId = jsonData['QuestionId'] if 'QuestionId' in jsonData.keys() else None
     q.QuestionCategoryId = jsonData['QuestionCategoryId']
     q.Statement = jsonData['Statement']
     q.IsDeleted = jsonData['IsDeleted']
-    
+
     if 'QuestionChoices' in jsonData.keys():
         choices = jsonData['QuestionChoices']
         q.QuestionChoices = []
@@ -95,7 +95,7 @@ def _questionFromJSON(jsonData):
             qc.OrderNumber = c['OrderNumber']
             qc.IsDeleted = c['IsDeleted']
             q.QuestionChoices.append(qc)
-    
+
     return q
 
 @app.route('/CreateQuestion', methods=['POST'])
@@ -116,10 +116,10 @@ def deleteQuestion(questionId):
     q = qService.getQuestion(questionId, s)
     if q is None:
         return 'False'
-    
+
     qService.deleteQuestion(q, s)
     return 'True'
-    
+
 ## Methods for querying questions with filter
 @app.route('/Questions', methods=['GET'])
 def getQuestions():
@@ -130,21 +130,21 @@ def getQuestions():
         - isDeleted (Boolean)
     '''
     if len(request.args) > 0:
-        
+
         c = request.args['category'] if 'category' in request.args else None
-        
+
         if 'isDeleted' in request.args:
             d = request.args['isDeleted'].lower() in ['true', 'yes', '1']
         else:
             d = None
-        
-        
+
+
         list = qService.listQuestions(c, d)
-        
+
     else:
         list = qService.listQuestions()
-        
-    list = [q.toObjDict() for q in list]    
+
+    list = [q.toObjDict() for q in list]
     return json.dumps(list, indent=4)
 
 ###############################################################################################
@@ -161,7 +161,7 @@ def addUserByAdmin():
 
 def _userFromJSON(jsonData):
     u = User()
-    u.UserId = jsonData['UserId'] if 'UserId' in jsonData.keys() else None             
+    u.UserId = jsonData['UserId'] if 'UserId' in jsonData.keys() else None
     u.Email = jsonData['Email']
     u.FirstName = jsonData['FirstName']
     u.LastName = jsonData['LastName']
@@ -169,7 +169,7 @@ def _userFromJSON(jsonData):
     u.StatusId = jsonData['StatusId']
     u.RoleId = jsonData['RoleId']
     u.IsDeleted = jsonData['IsDeleted']
-    
+
     return u
 
 @app.route('/UpdateUser', methods=['POST'])
@@ -184,26 +184,26 @@ def deleteUser(userId):
     u = uService.getUser(userId, s)
     if u is None:
         return 'False'
-    
+
     uService.deleteUser(u, s)
     return 'True'
 
 @app.route('/GetUserByEmail', methods=['GET'])
 def getUserByEmail():
-    
+
     s = db.getSession()
     if len(request.args) > 0 and 'email' in request.args:
         e = request.args['email']
         u = uService.getUserByEmail(e, s)
-        
+
         if u is not None:
             return json.dumps(u.toObjDict())
         else:
-            return ""
-            
+            return json.dumps({})
+
     else:
-        return ""
-   
+        return json.dumps({})
+
 
 ## Methods for querying questions with filter
 @app.route('/Users', methods=['GET'])
@@ -217,22 +217,22 @@ def getUsers():
         - isDeleted (Boolean)
     '''
     if len(request.args) > 0:
-        
+
         e = request.args['email'] if 'email' in request.args else None
         r = request.args['roleId'] if 'roleId' in request.args else None
         s = request.args['statusId'] if 'statusId' in request.args else None
-        
+
         if 'isDeleted' in request.args:
             d = request.args['isDeleted'].lower() in ['true', 'yes', '1']
         else:
             d = None
-        
+
         list = uService.listUsers(e, r, s, d)
-        
+
     else:
         list = uService.listUsers()
-        
-    list = [u.toObjDict() for u in list]    
+
+    list = [u.toObjDict() for u in list]
     return json.dumps(list, indent=4)
 
 ###############################################################################################
@@ -241,7 +241,7 @@ def getUsers():
 
 ## Methods for querying content with filter
 @app.route('/Recommendations', methods=['POST'])
-def get_recommendations():
+def recommendations():
     data = request.get_json(force=True)
     df = pd.DataFrame.from_dict(data, orient='index')
     print(df)
@@ -249,15 +249,15 @@ def get_recommendations():
     print(df)
     xgb_loaded_model = pickle.load(open("model/xgb.pkl", "rb"))
     pred = xgb_loaded_model.predict(df)
-    
+
     pred = pred[0] + 1
-    
+
 
     url = 'http://localhost:5000/Content?category='+str(pred)
-    
+
     content = requests.get(url)
     c = content.json()
-    
+
     return jsonify(c)
 
 
